@@ -1,6 +1,6 @@
 # ShowUs 
 
-#### Project Status: Incomplete
+Project Status: In progress
 
 ## Purpose
 

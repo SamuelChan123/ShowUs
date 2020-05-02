@@ -41,7 +41,7 @@ yarn start
 
 ## Deployment
 
-Netlify will be used for deployment in the future
+Netlify/heroku will be used for deployment in the future
 
 ## Roadmap
 

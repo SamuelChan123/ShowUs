@@ -38,6 +38,9 @@ yarn start
 - Node.js/NPM
 - Boostrap
 - Material UI
+- Facebook API (for login)
+- Facebook Graph API (in progress)
+- The Movie Database API (in progress)
 
 ## Deployment
 

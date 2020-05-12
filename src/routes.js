@@ -1,6 +1,10 @@
-export const SIGN_UP = "/signup";
+export const REGISTER = "/register";
 export const SIGN_IN = "/signin";
 export const LANDING = "/";
 export const HOME = "/home";
 export const ACCOUNT = "/account";
 export const PASSWORD_FORGET = "/forgotpassword";
+export const GROUPS = "/groups";
+export const RATE_SHOWS = "/rate/shows";
+export const RATE_MOVIES = "/rate/movies";
+export const FRIENDS = "/friends";

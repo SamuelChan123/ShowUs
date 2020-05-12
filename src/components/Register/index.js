@@ -19,6 +19,7 @@ import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../routes";
 // import * as ROLES from "../../roles";
 import { createMuiTheme } from "@material-ui/core";
+import { AuthUserContext } from "../Session";
 
 const theme = createMuiTheme({
   spacing: 4,
@@ -71,7 +72,7 @@ const ERROR_MSG_ACCOUNT_EXISTS = `
   on your personal account page.
 `;
 
-class SignUpFormBase extends Component {
+class RegisterFormBase extends Component {
   constructor(props) {
     super(props);
 
@@ -142,9 +143,13 @@ class SignUpFormBase extends Component {
       lastName === "";
 
     const { classes } = this.props;
+    document.title = "ShowUs – Register";
 
     return (
       <Container component="main" maxWidth="xs">
+        <AuthUserContext.Consumer>
+          {(authUser) => (authUser ? this.props.history.push("/Home") : null)}
+        </AuthUserContext.Consumer>
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -233,12 +238,12 @@ class SignUpFormBase extends Component {
               color="primary"
               className={classes.submit}
             >
-              Sign Up
+              <div style={{ color: "white" }}>Sign Up</div>
             </Button>
             {error && <p style={{ color: "red" }}>{error.message}</p>}
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="/SignIn" variant="body2">
+                <Link href={ROUTES.SIGN_IN} variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
@@ -253,12 +258,6 @@ class SignUpFormBase extends Component {
   }
 }
 
-const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
+const RegisterForm = compose(withRouter, withFirebase)(RegisterFormBase);
 
-SignUpForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withTheme(withStyles(useStyles(theme))(SignUpForm));
-
-export { SignUpForm };
+export default withTheme(withStyles(useStyles(theme))(RegisterForm));

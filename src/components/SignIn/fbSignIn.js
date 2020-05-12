@@ -25,13 +25,20 @@ class SignInFacebookBase extends Component {
   }
 
   onSubmit = (event) => {
+    console.log("hello");
     this.props.firebase
       .doSignInWithFacebook()
       .then((socialAuthUser) => {
         // Create a user in your Firebase Realtime Database too
         console.log(socialAuthUser);
+        var token = socialAuthUser.credential.accessToken;
+        this.props.getToken(token);
+        var fullName = socialAuthUser.additionalUserInfo.profile.name.split(
+          " "
+        );
         return this.props.firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.additionalUserInfo.profile.name,
+          firstName: fullName[0],
+          lastName: fullName[1],
           email: socialAuthUser.additionalUserInfo.profile.email,
           //   roles: {},
         });
@@ -59,12 +66,12 @@ class SignInFacebookBase extends Component {
     const { error } = this.state;
 
     return (
-      <div onSubmit={this.onSubmit}>
+      <div onClick={this.onSubmit}>
         <a className="fb connect" type="submit">
-          Sign In with Facebook
+          Continue with Facebook
         </a>
 
-        {error && <p>{error.message}</p>}
+        {error && <p style={{ color: "red" }}>{error.message}</p>}
       </div>
     );
   }

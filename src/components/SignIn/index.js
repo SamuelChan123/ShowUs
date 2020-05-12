@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -16,25 +15,10 @@ import Copyright from "../Copyright";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import * as ROUTES from "../../routes";
-import { withTheme } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
 import { SignInFacebook } from "./fbSignIn";
 import { withFirebase } from "../Firebase";
-import { sizing } from "@material-ui/system";
-
-// const theme = createMuiTheme({
-//   spacing: 4,
-//   palette: {
-//     primary: {
-//       main: "#4abdac",
-//     },
-//     secondary: {
-//       main: "#DFDCE3",
-//     },
-//   },
-// });
+import { AuthUserContext } from "../Session";
 
 const useStyles = (theme) => ({
   root: {
@@ -65,7 +49,7 @@ const useStyles = (theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
 });
 
@@ -102,14 +86,25 @@ class SignInForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  getFacebookToken = (token) => {
+    this.setState({
+      token: token,
+    });
+    console.log(this.state);
+  };
+
   render() {
     const { classes } = this.props;
     const { email, password, error } = this.state;
 
     const isInvalid = password === "" || email === "";
+    document.title = "ShowUs – Sign In";
 
     return (
       <div>
+        <AuthUserContext.Consumer>
+          {(authUser) => (authUser ? this.props.history.push("/home") : null)}
+        </AuthUserContext.Consumer>
         <Grid container component="main" className={classes.root}>
           <CssBaseline />
           <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -162,33 +157,35 @@ class SignInForm extends Component {
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
+                  label="Remember Me"
                 />
-                {error && <p>{error.message}</p>}
+                {error && <p style={{ color: "red" }}>{error.message}</p>}
                 <Button
                   type="submit"
                   fullWidth
+                  color="#ffffff"
                   variant="contained"
                   color="primary"
                   disabled={isInvalid}
                   className={classes.submit}
                 >
-                  Sign In
+                  <div style={{ color: "white" }}>Sign In</div>
                 </Button>
                 <Grid container justify="center">
                   <Button>
-                    <SignInFacebook />
+                    <SignInFacebook getToken={this.getFacebookToken} />
                   </Button>
                 </Grid>
+                <br />
                 <Grid container>
                   <Grid item xs>
-                    <Link href="/ForgotPassword" variant="body2">
+                    <Link href={ROUTES.PASSWORD_FORGET} variant="body2">
                       Forgot password?
                     </Link>
                   </Grid>
                   <Grid item>
                     {"Don't have an account? "}
-                    <Link href="/SignUp" variant="body2">
+                    <Link href={ROUTES.REGISTER} variant="body2">
                       Sign Up
                     </Link>
                   </Grid>
@@ -205,7 +202,6 @@ class SignInForm extends Component {
   }
 }
 
-// export default withStyles(useStyles(theme))(
 export default withStyles(useStyles)(
   compose(withRouter, withFirebase)(SignInForm)
 );
